@@ -2,6 +2,7 @@ import pandas as pd
 import networkx as nx
 from geopy.distance import geodesic
 import matplotlib.pyplot as plt
+from mpl_toolkits.basemap import Basemap
 
 # leitura do arquivo e filtragem com base em aeroportos médios e grandes
 arquivo = "br-airports.csv"
@@ -27,19 +28,33 @@ for i, origem in aeroportos_principais_estado.iterrows():
             distancia = round(distancia,2)
             grafo.add_edge(origem['iata_code'], destino['iata_code'], weight=distancia)
 
-# cria uma cópia do dataframe para modificá-lo
-aeroportos_principais_estado = aeroportos_principais_estado.copy()
+# criação do mapa usando basemap
+m = Basemap(projection='merc', llcrnrlat=-35, urcrnrlat=10, llcrnrlon=-75, urcrnrlon=-30)
 
-# adicionando coluna Estado usando .loc
-aeroportos_principais_estado.loc[:, 'Estado'] = aeroportos_principais_estado['iso_region'].str.split('-').str[1]
+# obtendo a posição dos nós a partir das coordenadas usando basemap
+pos = {aeroporto['iata_code']: m(aeroporto['longitude_deg'], aeroporto['latitude_deg']) 
+       for _, aeroporto in aeroportos_principais_estado.iterrows()}
 
-# obtendo a posição dos nós a partir das coordenadas
-pos = {nodo: (data['pos'][0], data['pos'][1]) for nodo, data in grafo.nodes(data=True)}
+# configurando a figura e o eixo
+fig, ax = plt.subplots(figsize=(10, 8))
 
-# plotar o grafo
-plt.figure(figsize=(10, 8))
-nx.draw_networkx(grafo, pos, with_labels=True, node_size=500, font_size=10, node_color='lightblue')
+# plotando o mapa
+m.drawcountries(linewidth=1, color='black')
+m.drawstates(linewidth=1, color='black')
+m.drawcoastlines(linewidth=1)
+m.fillcontinents(color='forestgreen',lake_color='forestgreen')
+m.drawmapboundary(fill_color='deepskyblue')
+
+# plotando o grafo no mapa
+for aresta in grafo.edges(data=True):
+    origem, destino, data = aresta
+    x1, y1 = pos[origem]
+    x2, y2 = pos[destino]
+    ax.plot([x1, x2], [y1, y2], color='gray', linewidth=0.5)
+for no, (x, y) in pos.items():
+    ax.scatter(x, y, s=50, c='blue', edgecolors='k', zorder=1)
+    ax.text(x, y, no, fontsize=8, ha='center', color='white', zorder=2)
 
 # mostrar o gráfico
-plt.title("Malha Aérea do Brasil")
+plt.title("Malha Aérea do Brasil", fontsize=16)
 plt.show()
