@@ -1,6 +1,7 @@
 import pandas as pd
 import networkx as nx
 from geopy.distance import geodesic
+import matplotlib.pyplot as plt
 
 # leitura do arquivo e filtragem com base em aeroportos médios e grandes
 arquivo = "br-airports.csv"
@@ -25,3 +26,20 @@ for i, origem in aeroportos_principais_estado.iterrows():
             distancia = geodesic((origem['latitude_deg'],origem['longitude_deg']),(destino['latitude_deg'], destino['longitude_deg'])).km
             distancia = round(distancia,2)
             grafo.add_edge(origem['iata_code'], destino['iata_code'], weight=distancia)
+
+# cria uma cópia do dataframe para modificá-lo
+aeroportos_principais_estado = aeroportos_principais_estado.copy()
+
+# adicionando coluna Estado usando .loc
+aeroportos_principais_estado.loc[:, 'Estado'] = aeroportos_principais_estado['iso_region'].str.split('-').str[1]
+
+# obtendo a posição dos nós a partir das coordenadas
+pos = {nodo: (data['pos'][0], data['pos'][1]) for nodo, data in grafo.nodes(data=True)}
+
+# plotar o grafo
+plt.figure(figsize=(10, 8))
+nx.draw_networkx(grafo, pos, with_labels=True, node_size=500, font_size=10, node_color='lightblue')
+
+# mostrar o gráfico
+plt.title("Malha Aérea do Brasil")
+plt.show()
