@@ -34,7 +34,7 @@ for i, origem in enumerate(lista_nos):
         grafo.add_edge(origem, destino, weight=round(distancia, 2))
 
 
-# criar o mapa do primeiro gráfico usando basemap
+# criar o primeiro mapa usando basemap
 m = Basemap(projection='merc', llcrnrlat=-35, urcrnrlat=10, llcrnrlon=-75, urcrnrlon=-30)
 
 # obter a posição dos nós a partir das coordenadas usando basemap
@@ -79,7 +79,7 @@ distancia_total = nx.shortest_path_length(grafo,source=origem, target=destino, w
 # configurar a figura e o eixo do segundo gráfico
 fig2, ax2 = plt.subplots(figsize=(10, 8))
 
-# criar o mapa do segundo gráfico usando basemap
+# criar o segundo mapa usando basemap
 m2 = Basemap(projection='merc', llcrnrlat=-35, urcrnrlat=10, llcrnrlon=-75, urcrnrlon=-30, ax=ax2)
 
 # plotar o segundo mapa
