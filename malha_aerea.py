@@ -22,14 +22,24 @@ def criar_grafo(aeroportos_principais_estado):
     # transformar os nós do grafo em lista
     lista_nos = list(grafo.nodes)
 
-    # adicionar a distância entre cada aeroporto como arestas do grafo usando geopy
+    # adicionar as arestas com base na lista de nós
     for i, origem in enumerate(lista_nos):
+        # loop para adicionar as arestas e garantir que cada nó de origem se conecte somente com 3 outros nós de destino para simular uma malha aérea
         for offset in range(1, 4):
+            # estabelecer o índice de destino e garantir que o índice seja cíclico
             destino_idx = (i + offset) % len(lista_nos)
+            
+            # obter o nó da lista de nós com base no índice de destino
             destino = lista_nos[destino_idx]
+
+            # obter as coordenadas geograficas do nó de origem e destino
             origem_latlon = grafo.nodes[origem]['pos']
             destino_latlon = grafo.nodes[destino]['pos']
+
+            # calcula a distância entre a origem e o destino e converte para km usando o geopy
             distancia = geodesic(origem_latlon, destino_latlon).km
+
+            # adiciona as arestas ao grafo
             grafo.add_edge(origem, destino, weight=round(distancia, 2))
     
     # retornar grafo
