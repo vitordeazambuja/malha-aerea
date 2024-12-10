@@ -4,7 +4,7 @@
 Um projeto em Python que utiliza grafos para modelar aeroportos geograficamente e simular rotas aéreas. A aplicação calcula a rota de menor distância entre os aeroportos com o algoritmo de Dijkstra e a destaca no mapa.
 
 ## Funcionalidades
-- Vizualização da malha aérea do Brasil em um mapa com os principais aeroportos médios e grandes.
+- Visualização da malha aérea do Brasil em um mapa com os principais aeroportos médios e grandes.
 - Interface gráfica permite selecionar estados e aeroportos de origem e destino.
 - Cálculo do menor caminho entre dois aeroportos usando o algoritmo de Dijkstra, considerando a distância geográfica.
 - Exibe a rota calculada no mapa, juntamente com a distância total.
